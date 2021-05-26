@@ -1,0 +1,19 @@
+.bstyle{
+    background-color:red;
+    color: white;
+    padding: 30px 30px;
+    text-align: center;
+    font-size: medium;
+    margin: 20px 10px 20px 30px;
+}
+
+div{
+    position: absolute;
+    width : 5px;
+    height : 150px;
+}
+
+.parentdiv{
+    width : 200px;
+    height : 200px; 
+}
