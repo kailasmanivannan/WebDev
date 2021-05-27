@@ -1,0 +1,15 @@
+.bstyle{
+    background-color:red;
+    color: white;
+    padding: 30px 30px;
+    text-align: center;
+    font-size: 30px;
+    margin: auto;
+}
+#a{
+    display: flex;
+}
+#canva{
+    margin: auto;
+    display: flex;
+}
