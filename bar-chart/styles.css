@@ -1,0 +1,33 @@
+input[type=text] {
+    width :50%;
+    margin: auto;
+    padding: 10px;
+    font-size: large;
+    box-sizing: border-box;
+    border: 2px solid rgb(0, 0, 0);
+  }
+textarea{
+    width: 50%;
+    margin: auto;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 2px solid rgb(0, 0, 0);
+}
+.bstyle{
+    background-color:rgb(119, 0, 255);
+    color: white;
+    padding: 20px 20px;
+    text-align: center;
+    font-size: 20px;
+    margin: auto;
+    border-radius: 26px;
+}
+.main{
+    display: flex;
+}
+.sub1{
+    flex :1;
+}
+.sub2{
+    flex :2;
+}
