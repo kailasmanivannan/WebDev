@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>bar chart</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class ="main">
+        <div class ="sub1">
+        <form id ="datafrm">
+            <label for="col1">Column1 Name</label><br>
+            <input type="text" id="col1" name="col1"> <br>
+            <label for="col1">Column2 Name</label><br>
+            <input type="text" id="col2" name="col2"> <br><br>
+            <label for="values1">Column1 values1</label><br>
+            <textarea id ="values1" rows="2" cols="25"></textarea><br>
+            <label for="values2">Column2 values2</label><br>
+            <textarea id ="values2" rows="2" cols="25"></textarea><br>
+        </form>
+        <button class ="bstyle" id="btn">submit</button>
+        </div>
+        <div class ="sub2">
+            <canvas id ="canva"></canvas>
+        </div>
+    </div>
+    <script type="module" src="main.js"></script>
+</body>
+</html>
