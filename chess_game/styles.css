@@ -1,0 +1,11 @@
+.main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+p{
+    font-size: x-large;
+    font-family: Arial, Helvetica, sans-serif;
+}
