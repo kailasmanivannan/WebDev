@@ -22,29 +22,52 @@ King.prototype.validMoves = function (position, data, status) {
 };
 King.prototype.checkMate = function (spot, kingId, checkId) {
   var kingMoves = this.validMoves(kingId, spot);
-  if (kingMoves.length === 0 || kingMoves.includes(checkId)) {
-    return false;
-  }
+  var checkPiece = spot[checkId + 1];
+  var ignoreCheckPiece = kingMoves.includes(checkId);
   var otherMoves = [],
     safePositon = false,
     cankill = false;
   for (var i = 1; i <= 64; i++) {
+    if (ignoreCheckPiece) {
+      spot[checkId + 1] = null;
+    }
     if (spot[i] !== null) {
       if (!this.isSamecolor(spot[i])) {
         otherMoves = spot[i].validMoves(i - 1, spot);
         for (var j = 0; j < kingMoves.length; j++) {
+          // console.log(spot[i],otherMoves);
           if (otherMoves.indexOf(kingMoves[j]) !== -1) {
             kingMoves.splice(j, 1);
           }
         }
-        if (kingMoves.length === 0) {
+        if (!ignoredMoves && kingMoves.length === 0) {
           safePositon = true;
           break;
         }
       }
     }
+    spot[checkId + 1] = checkPiece;
   }
-  cankill = canICastle([checkId], this.isWhite(), spot);
+  if (ignoreCheckPiece) {
+    var ignoredMoves = spot[checkId + 1].validMoves(checkId, spot);
+    for (var i = 0; i < ignoredMoves.length; i++) {
+      for (var j = 0; j < kingMoves.length; i++) {
+        if (ignoredMoves.indexOf(kingMoves[j]) !== -1) {
+          kingMoves.splice(j, 1);
+        }
+      }
+    }
+    if (kingMoves.length === 0) {
+      safePositon = true;
+    }
+  }
+
+  if (kingMoves.length !== 0 && ignoreCheckPiece) {
+    return false;
+  }
+  cankill = this.canIkill([checkId], this.isWhite(), spot);
+  // console.log("Kmoves",kingMoves);
+  // console.log(safePositon, cankill);
   return safePositon && cankill;
 };
 King.prototype.calcMoves = function (position, spot) {
@@ -176,3 +199,20 @@ function canICastle(moves, color, spot) {
   }
   return true;
 }
+King.prototype.canIkill = function (moves, color, spot) {
+  for (var i = 1; i <= 64; i++) {
+    if (
+      spot[i] !== null &&
+      spot[i].isWhite() === color &&
+      spot[i].getName() !== "KING"
+    ) {
+      otherMoves = spot[i].validMoves(i - 1, spot);
+      for (var j = 0; j < moves.length; j++) {
+        if (otherMoves.indexOf(moves[j]) !== -1) {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
+};
