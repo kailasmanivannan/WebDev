@@ -19,7 +19,7 @@ function playGame(index) {
         } else {
           gameData.moves =gameData.currentPiece.validMoves(index, gameData.spot,GameStatus.getStatus());
         }
-        boardData.setHighlight(gameData.moves, index);
+        boardData.setHighlight(gameData.moves, index); 
         //render the highlighted positions
         gameData.oldIndex = index;
         gameData.isPieceSet = true;
@@ -37,7 +37,8 @@ function playGame(index) {
       } else {
         gameData.isPieceSet = false;
         text.innerText = GAMEMESSAGE.NOTMOVE;
-        drawBoard();
+        // drawBoard(); canvas
+        drawHtml();
         return;
       }
     }
@@ -65,12 +66,14 @@ function playGame(index) {
       if (canIMove) {
         doMove(index);
         text.innerText = GAMEMESSAGE.WHITEMOVE;
-        drawBoard();
+        // drawBoard(); canvas
+        drawHtml();
         return;
       } else {
         gameData.isPieceSet = false;
         text.innerText = GAMEMESSAGE.NOTMOVE;
-        drawBoard();
+        // drawBoard(); canvas
+        drawHtml();
         return;
       }
     }
@@ -183,23 +186,28 @@ function doMove(index) {
       gameData.spot[index + 2].setMove();
       boardData.updateBoard(gameData.oldIndex, index);
       boardData.updateBoard(index + 1, index - 1);
-      drawBoard();
+     // drawBoard(); canvas
+      drawHtml();
     } else {
       gameData.currentPiece.setMove();
       gameData.spot[index - 1].setMove();
       boardData.updateBoard(gameData.oldIndex, index);
       boardData.updateBoard(index - 2, index + 1);
-      drawBoard();
+      // drawBoard(); canvas
+      drawHtml();
     }
   } else if (doEnpassant(index)) {
-    drawBoard();
+    // drawBoard(); canvas
+    drawHtml();
     // return; // render and exit
   } else {
     boardData.updateBoard(gameData.oldIndex, index);
-    drawBoard();
+    // drawBoard(); canvas
+    drawHtml();
   }
   if (doPromotion(index)) {
-    drawBoard();
+    // drawBoard(); canvas
+    drawHtml();
     // render
   }
   setPieceProp(index);
@@ -210,7 +218,8 @@ function doMove(index) {
       let result = (STATUS.WINNER += GAMEMESSAGE.RESULT);
       alert(result);
       GameStatus.resetGame();
-      drawBoard();
+      // drawBoard(); canvas
+      drawHtml();
       return;
     }
     alert(STATUS.CHECK);

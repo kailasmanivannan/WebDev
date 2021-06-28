@@ -64,3 +64,20 @@ var GAMEMESSAGE = {
   PROMOTION : "please enter a piece name (in CAPITAL letters)",
   RESULT : " has won the game congrats"
 }
+function getImgPath(color, name) {
+  var path = color ? IMGPATH.white : IMGPATH.black;
+  switch (name) {
+    case TYPE.ROOK:
+      return path.ROOK;
+    case TYPE.PAWN:
+      return path.PAWN;
+    case TYPE.QUEEN:
+      return path.QUEEN;
+    case TYPE.BISHOP:
+      return path.BISHOP;
+    case TYPE.KING:
+      return path.KING;
+    case TYPE.KNIGHT:
+      return path.KNIGHT;
+  }
+}

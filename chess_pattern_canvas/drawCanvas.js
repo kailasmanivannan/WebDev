@@ -7,24 +7,6 @@ function getXY(n) {
   return { X: x, Y: y };
 }
 
-function getImgPath(color, name) {
-  var path = color ? IMGPATH.white : IMGPATH.black;
-  switch (name) {
-    case TYPE.ROOK:
-      return path.ROOK;
-    case TYPE.PAWN:
-      return path.PAWN;
-    case TYPE.QUEEN:
-      return path.QUEEN;
-    case TYPE.BISHOP:
-      return path.BISHOP;
-    case TYPE.KING:
-      return path.KING;
-    case TYPE.KNIGHT:
-      return path.KNIGHT;
-  }
-}
-
 var drawBoard = function () {
   data = boardData.getBoard();
   for (var i = 0; i < 8; i++) {
