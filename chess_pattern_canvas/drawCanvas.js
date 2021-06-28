@@ -1,24 +1,29 @@
 var canvas = document.getElementById("board");
 var context = canvas.getContext("2d");
 var data;
-var IMGPATH = {
-  false: {
-    ROOK: "♜",
-    BISHOP: "♝",
-    KING: "♚",
-    KNIGHT: "♞	",
-    QUEEN: "♛",
-    PAWN: "♟︎	",
-  },
-  true: {
-    ROOK: "♖",
-    BISHOP: "♗",
-    KING: "♔",
-    KNIGHT: "♘",
-    QUEEN: "♕",
-    PAWN: "♙",
-  },
-};
+function getXY(n) {
+  let y = Math.floor(n / 8);
+  let x = n - 8 * y;
+  return { X: x, Y: y };
+}
+
+function getImgPath(color, name) {
+  var path = color ? IMGPATH.white : IMGPATH.black;
+  switch (name) {
+    case TYPE.ROOK:
+      return path.ROOK;
+    case TYPE.PAWN:
+      return path.PAWN;
+    case TYPE.QUEEN:
+      return path.QUEEN;
+    case TYPE.BISHOP:
+      return path.BISHOP;
+    case TYPE.KING:
+      return path.KING;
+    case TYPE.KNIGHT:
+      return path.KNIGHT;
+  }
+}
 
 var drawBoard = function () {
   data = boardData.getBoard();
@@ -37,8 +42,8 @@ var drawBoard = function () {
       var color = data[i].isWhite();
       var name = data[i].getName();
       var piece = getImgPath(color, name);
-      var [xcord, ycord] = getAB(i - 1);
-      context.fillText(piece, xcord * 90, (ycord + 1) * 90 - 10);
+      var cords = getXY(i - 1);
+      context.fillText(piece, cords.X * 90, (cords.Y + 1) * 90 - 10);
     }
   }
 };
@@ -46,6 +51,7 @@ var drawBoard = function () {
 drawBoard();
 
 var drawHighlight = function () {
+  context.globalAlpha = 0.5;
   data = boardData.getBoard();
   var highlightPos = boardData.getHighlight();
   if (highlightPos.length === 0) {
@@ -55,37 +61,13 @@ var drawHighlight = function () {
   for (var i = 0; i < highlightPos.length - 1; i++) {
     highlightColor = data[highlightPos[i] + 1] === null ? "#1FF51B" : "red";
     context.fillStyle = highlightColor;
-    var [x, y] = getAB(highlightPos[i]);
-    context.clearRect(x * 90, y * 90, 90, 90);
-    context.fillRect(x * 90, y * 90, 90, 90);
+    var cords = getXY(highlightPos[i]);
+    context.clearRect(cords.X * 90, cords.Y * 90, 90, 90);
+    context.fillRect(cords.X * 90, cords.Y * 90, 90, 90);
   }
-  context.fillStyle ="#1FF51B" ;
-  var [x, y] = getAB(highlightPos[highlightPos.length-1]);
-  context.clearRect(x * 90, y * 90, 90, 90);
-  context.fillRect(x * 90, y * 90, 90, 90);
-
+  context.fillStyle = "#1FF51B";
+  var cords = getXY(highlightPos[highlightPos.length - 1]);
+  context.clearRect(cords.X * 90, cords.y * 90, 90, 90);
+  context.fillRect(cords.X * 90, cords.Y * 90, 90, 90);
+  context.globalAlpha = 1.0;
 };
-
-function getAB(n) {
-  let y = Math.floor(n / 8);
-  let x = n - 8 * y;
-  return [x, y];
-}
-
-function getImgPath(color, name) {
-  var path = color ? IMGPATH.true : IMGPATH.false;
-  switch (name) {
-    case TYPE.ROOK:
-      return path.ROOK;
-    case TYPE.PAWN:
-      return path.PAWN;
-    case TYPE.QUEEN:
-      return path.QUEEN;
-    case TYPE.BISHOP:
-      return path.BISHOP;
-    case TYPE.KING:
-      return path.KING;
-    case TYPE.KNIGHT:
-      return path.KNIGHT;
-  }
-}

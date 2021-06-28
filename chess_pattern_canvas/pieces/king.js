@@ -12,7 +12,7 @@ King.prototype.setMove = function () {
 King.prototype.validMoves = function (position, data, status) {
   var validPositions = [];
   var spot = data;
-  if (status === "CHECK") {
+  if (status === STATUS.CHECK) {
     validPositions = this.checkMoves(position, spot);
     return validPositions;
   }
@@ -118,12 +118,12 @@ King.prototype.castleMoves = function (position, spot, status, validPositions) {
   var whiteRook2 = spot[64];
   var leftMoves = [position - 2, position - 1];
   var rightMoves = [position + 2, position + 1];
-  if (status !== "CHECK" && !this.isWhite() && !this.isMoved()) {
+  if (status !== STATUS.CHECK && !this.isWhite() && !this.isMoved()) {
     //black king castle
     if (
       spot[leftMoves[0] + 1] === null &&
       spot[leftMoves[1] + 1] === null &&
-      blackRook1.getName() === "ROOK" &&
+      blackRook1.getName() === TYPE.ROOK &&
       !blackRook1.isMoved()
     ) {
       //left castle
@@ -134,7 +134,7 @@ King.prototype.castleMoves = function (position, spot, status, validPositions) {
     if (
       spot[rightMoves[0] + 1] === null &&
       spot[rightMoves[1] + 1] === null &&
-      blackRook2.getName() === "ROOK" &&
+      blackRook2.getName() === TYPE.ROOK &&
       !blackRook2.isMoved()
     ) {
       //right castle
@@ -142,12 +142,12 @@ King.prototype.castleMoves = function (position, spot, status, validPositions) {
         validPositions.push(rightMoves[0]);
       }
     }
-  } else if (status !== "CHECK" && this.isWhite() && !this.isMoved()) {
+  } else if (status !== STATUS.CHECK && this.isWhite() && !this.isMoved()) {
     //white king castle
     if (
       spot[leftMoves[0] + 1] === null &&
       spot[leftMoves[1] + 1] === null &&
-      whiteRook1.getName() === "ROOK" &&
+      whiteRook1.getName() === TYPE.ROOK &&
       !whiteRook1.isMoved()
     ) {
       //left castle
@@ -158,7 +158,7 @@ King.prototype.castleMoves = function (position, spot, status, validPositions) {
     if (
       spot[rightMoves[0] + 1] === null &&
       spot[rightMoves[1] + 1] === null &&
-      whiteRook2.getName() === "ROOK" &&
+      whiteRook2.getName() === TYPE.ROOK &&
       !whiteRook2.isMoved()
     ) {
       //right castle
@@ -204,7 +204,7 @@ King.prototype.canIkill = function (moves, color, spot) {
     if (
       spot[i] !== null &&
       spot[i].isWhite() === color &&
-      spot[i].getName() !== "KING"
+      spot[i].getName() !== TYPE.KING
     ) {
       otherMoves = spot[i].validMoves(i - 1, spot);
       for (var j = 0; j < moves.length; j++) {

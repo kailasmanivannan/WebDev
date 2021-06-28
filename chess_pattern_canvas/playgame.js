@@ -1,21 +1,4 @@
 var text = document.getElementById("status");
-var gameData = {
-  currentPlayer: null,
-  isPieceSet: null,
-  currentPiece: null,
-  spot: null,
-  moves: null,
-  oldIndex: null,
-  status: null,
-  checkPiece: null,
-  kingPiece: null,
-};
-var STATUS = {
-  NOTHING: "NOTHING",
-  CHECK: "CHECK",
-  CHECKMATE: "CHECKMATE",
-  WINNER: "NOONE",
-};
 function initGame() {
   gameData.currentPlayer = true; //true for white ;false for black
   gameData.isPieceSet = false;
@@ -26,61 +9,34 @@ function initGame() {
 }
 initGame();
 function playGame(index) {
-  var blockPos;
   gameData.spot = boardData.getBoard();
   if (gameData.currentPlayer) {
     if (!gameData.isPieceSet) {
       gameData.currentPiece = gameData.spot[index + 1];
       if (gameData.currentPiece !== null && gameData.currentPiece.isWhite()) {
         if (GameStatus.getStatus() === STATUS.CHECK) {
-          blockPos = getBlockPos(gameData.checkPiece, gameData.kingPiece);
-          var piecemoves =
-            gameData.currentPiece.getName() === TYPE.KING
-              ? gameData.currentPiece.validMoves(
-                  index,
-                  gameData.spot,
-                  GameStatus.getStatus()
-                )
-              : gameData.currentPiece.validMoves(index, gameData.spot);
-          if (
-            gameData.currentPiece.getName() === TYPE.KING ||
-            piecemoves.some((r) => blockPos.includes(r))
-          ) {
-            //yes can move
-            gameData.moves = piecemoves;
-          } else {
-            alert("select a valid piece");
-            gameData.isPieceSet = false;
-            return;
-          }
+          if(!validCheckMoves(index)){return;}
         } else {
-          gameData.moves =
-            gameData.currentPiece.getName() === TYPE.KING
-              ? gameData.currentPiece.validMoves(
-                  index,
-                  gameData.spot,
-                  GameStatus.getStatus()
-                )
-              : gameData.currentPiece.validMoves(index, gameData.spot);
+          gameData.moves =gameData.currentPiece.validMoves(index, gameData.spot,GameStatus.getStatus());
         }
-        boardData.setHighlight(gameData.moves,index);
+        boardData.setHighlight(gameData.moves, index);
         //render the highlighted positions
         gameData.oldIndex = index;
         gameData.isPieceSet = true;
         return;
       } else {
         // not a white piece select a white piece;
-        text.innerText = "select a white piece";
+        text.innerText = GAMEMESSAGE.SELECTWHITE;
       }
     } else {
       var canIMove = gameData.moves.includes(index);
       if (canIMove) {
         doMove(index);
-        text.innerText = "black's move";
+        text.innerText = GAMEMESSAGE.BLACKMOVE;
         return;
       } else {
         gameData.isPieceSet = false;
-        text.innerText = "not a possible move";
+        text.innerText = GAMEMESSAGE.NOTMOVE;
         drawBoard();
         return;
       }
@@ -91,55 +47,29 @@ function playGame(index) {
       gameData.currentPiece = gameData.spot[index + 1];
       if (gameData.currentPiece !== null && !gameData.currentPiece.isWhite()) {
         if (GameStatus.getStatus() === STATUS.CHECK) {
-          blockPos = getBlockPos(gameData.checkPiece, gameData.kingPiece);
-          var piecemoves =
-            gameData.currentPiece.getName() === TYPE.KING
-              ? gameData.currentPiece.validMoves(
-                  index,
-                  gameData.spot,
-                  GameStatus.getStatus()
-                )
-              : gameData.currentPiece.validMoves(index, gameData.spot);
-          if (
-            gameData.currentPiece.getName() === TYPE.KING ||
-            piecemoves.some((r) => blockPos.includes(r))
-          ) {
-            //yes can move
-            gameData.moves = piecemoves;
-          } else {
-            alert("select a valid piece");
-            gameData.isPieceSet = false;
-            return;
-          }
+          if(!validCheckMoves(index)){return;}
         } else {
-          gameData.moves =
-            gameData.currentPiece.getName() === TYPE.KING
-              ? gameData.currentPiece.validMoves(
-                  index,
-                  gameData.spot,
-                  GameStatus.getStatus()
-                )
-              : gameData.currentPiece.validMoves(index, gameData.spot);
+          gameData.moves = gameData.currentPiece.validMoves(index, gameData.spot,GameStatus.getStatus());
         }
-        boardData.setHighlight(gameData.moves,index);
+        boardData.setHighlight(gameData.moves, index);
         //render the highlighted positions
         gameData.oldIndex = index;
         gameData.isPieceSet = true;
         return;
       } else {
         // not a black piece select a black piece;
-        text.innerText = "select a black piece";
+        text.innerText = GAMEMESSAGE.SELECTBLACK;
       }
     } else {
       var canIMove = gameData.moves.includes(index);
       if (canIMove) {
         doMove(index);
-        text.innerText = "white's move";
+        text.innerText = GAMEMESSAGE.WHITEMOVE;
         drawBoard();
         return;
       } else {
         gameData.isPieceSet = false;
-        text.innerText = "not a possible move";
+        text.innerText = GAMEMESSAGE.NOTMOVE;
         drawBoard();
         return;
       }
@@ -153,7 +83,6 @@ var GameStatus = {
     var list = gameData.spot[id + 1].validMoves(id, gameData.spot);
     if (list.includes(pos)) {
       //king in check
-      alert("check");
       gameData.status = STATUS.CHECK;
       gameData.checkPiece = id;
       gameData.kingPiece = pos;
@@ -204,7 +133,7 @@ function doPromotion(index) {
     gameData.currentPiece.getName() === TYPE.PAWN &&
     (Math.floor(index / 8) === 0 || Math.floor(index / 8) === 7)
   ) {
-    var choice = prompt("Please enter piece name (in capital letters)");
+    var choice = prompt(GAMEMESSAGE.PROMOTION);
     if (choice !== null || choice !== "") {
       gameData.spot[index + 1] = factory.getPiece(
         choice,
@@ -215,13 +144,21 @@ function doPromotion(index) {
   }
 }
 function doEnpassant(index) {
+  var oldPos = gameData.oldIndex;
+  var diagPos = [
+    oldPos + 1 + 8,
+    oldPos - 1 + 8,
+    oldPos + 1 - 8,
+    oldPos - 1 - 8,
+  ];
   if (
     gameData.currentPiece.pieceName === TYPE.PAWN &&
-    (index === gameData.oldIndex + 1 || index === gameData.oldIndex - 1)
+    diagPos.includes(index) &&
+    gameData.spot[index + 1] === null
   ) {
-    var updateIndex = gameData.currentPlayer ? index - 8 : index + 8;
-    boardData.updateBoard(gameData.oldIndex, index);
-    boardData.updateBoard(index, updateIndex);
+    var updateIndex = gameData.currentPlayer ? index + 8 : index - 8;
+    boardData.updateBoard(gameData.oldIndex, updateIndex);
+    boardData.updateBoard(updateIndex, index);
     return true;
   }
 }
@@ -255,7 +192,6 @@ function doMove(index) {
       drawBoard();
     }
   } else if (doEnpassant(index)) {
-    index = gameData.currentPlayer ? index - 8 : index + 8;
     drawBoard();
     // return; // render and exit
   } else {
@@ -271,12 +207,13 @@ function doMove(index) {
   if (GameStatus.getStatus() === STATUS.CHECK) {
     if (GameStatus.checkMate(gameData.currentPlayer, index)) {
       //reset game
-      let result = (STATUS.WINNER += " is the winner");
+      let result = (STATUS.WINNER += GAMEMESSAGE.RESULT);
       alert(result);
       GameStatus.resetGame();
       drawBoard();
       return;
     }
+    alert(STATUS.CHECK);
   }
   setEnpassant();
   gameData.currentPlayer = !gameData.currentPlayer;
@@ -358,5 +295,28 @@ function getBlockPos(checkPiece, kingPiece) {
       }
       return blockMoves;
     }
+  }
+}
+function validCheckMoves(index) {
+  var blockPos = getBlockPos(gameData.checkPiece, gameData.kingPiece);
+  var piecemoves =
+    gameData.currentPiece.getName() === TYPE.KING
+      ? gameData.currentPiece.validMoves(
+          index,
+          gameData.spot,
+          GameStatus.getStatus()
+        )
+      : gameData.currentPiece.validMoves(index, gameData.spot);
+  if (
+    gameData.currentPiece.getName() === TYPE.KING ||
+    piecemoves.some(function(r) { return blockPos.includes(r)})
+  ) {
+    //yes can move
+    gameData.moves = piecemoves;
+    return true;
+  } else {
+    alert(GAMEMESSAGE.SELECTVALID);
+    gameData.isPieceSet = false;
+    return false;
   }
 }

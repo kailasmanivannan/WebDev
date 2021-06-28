@@ -76,7 +76,7 @@ Pawn.prototype.calcEnpassant = function (position, spot, moves) {
       !this.isSamecolor(spot[position]) &&
       spot[position].getEnpassant()
     ) {
-      moves.push(position - 1);
+      moves.push(position - 1 -8);
     }
     if (
       !this.isOnRightEdge(position) &&
@@ -85,7 +85,7 @@ Pawn.prototype.calcEnpassant = function (position, spot, moves) {
       !this.isSamecolor(spot[position + 2]) &&
       spot[position + 2].getEnpassant()
     ) {
-      moves.push(position + 1);
+      moves.push(position + 1 -8);
     }
   } else if (!this.isWhite() && Math.floor(position / 8) === 4) {
     if (
@@ -95,7 +95,7 @@ Pawn.prototype.calcEnpassant = function (position, spot, moves) {
       !this.isSamecolor(spot[position]) &&
       spot[position].getEnpassant()
     ) {
-      moves.push(position - 1);
+      moves.push(position - 1 + 8);
     }
     if (
       !this.isOnRightEdge(position) &&
@@ -104,7 +104,7 @@ Pawn.prototype.calcEnpassant = function (position, spot, moves) {
       !this.isSamecolor(spot[position + 2]) &&
       spot[position + 2].getEnpassant()
     ) {
-      moves.push(position + 1);
+      moves.push(position + 1 + 8);
     }
   }
 };
