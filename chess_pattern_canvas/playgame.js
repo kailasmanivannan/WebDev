@@ -8,6 +8,7 @@ function initGame() {
   STATUS.WINNER = "NOONE";
 }
 initGame();
+
 function playGame(index) {
   gameData.spot = boardData.getBoard();
   if (gameData.currentPlayer) {
@@ -37,8 +38,7 @@ function playGame(index) {
       } else {
         gameData.isPieceSet = false;
         text.innerText = GAMEMESSAGE.NOTMOVE;
-        // drawBoard(); canvas
-        drawHtml();
+        drawBoard();
         return;
       }
     }
@@ -66,14 +66,12 @@ function playGame(index) {
       if (canIMove) {
         doMove(index);
         text.innerText = GAMEMESSAGE.WHITEMOVE;
-        // drawBoard(); canvas
-        drawHtml();
+        drawBoard();
         return;
       } else {
         gameData.isPieceSet = false;
         text.innerText = GAMEMESSAGE.NOTMOVE;
-        // drawBoard(); canvas
-        drawHtml();
+        drawBoard();
         return;
       }
     }
@@ -186,28 +184,23 @@ function doMove(index) {
       gameData.spot[index + 2].setMove();
       boardData.updateBoard(gameData.oldIndex, index);
       boardData.updateBoard(index + 1, index - 1);
-     // drawBoard(); canvas
-      drawHtml();
+     drawBoard();
     } else {
       gameData.currentPiece.setMove();
       gameData.spot[index - 1].setMove();
       boardData.updateBoard(gameData.oldIndex, index);
       boardData.updateBoard(index - 2, index + 1);
-      // drawBoard(); canvas
-      drawHtml();
+      drawBoard();
     }
   } else if (doEnpassant(index)) {
-    // drawBoard(); canvas
-    drawHtml();
+    drawBoard();
     // return; // render and exit
   } else {
     boardData.updateBoard(gameData.oldIndex, index);
-    // drawBoard(); canvas
-    drawHtml();
+    drawBoard();
   }
   if (doPromotion(index)) {
-    // drawBoard(); canvas
-    drawHtml();
+    drawBoard();
     // render
   }
   setPieceProp(index);
@@ -218,8 +211,7 @@ function doMove(index) {
       let result = (STATUS.WINNER += GAMEMESSAGE.RESULT);
       alert(result);
       GameStatus.resetGame();
-      // drawBoard(); canvas
-      drawHtml();
+      drawBoard();
       return;
     }
     alert(STATUS.CHECK);

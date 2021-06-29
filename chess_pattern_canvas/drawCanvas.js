@@ -1,6 +1,25 @@
 var canvas = document.getElementById("board");
 var context = canvas.getContext("2d");
 var data;
+var boardspaces = canvas.offsetWidth / 8;
+canvas.addEventListener("mousedown", function(e) {getCordinates(e);});
+
+function getCordinates(e) {
+    let rect = canvas.getBoundingClientRect();
+    let x = e.clientX - rect.left;
+    let y = e.clientY - rect.top;
+    x = Math.floor(x / boardspaces);
+    y = Math.floor(y / boardspaces);
+    getIndex(x, y);
+  }
+  
+  function getIndex(x, y) {
+    let clickedIndex = x + y * 8;
+    // console.log("postion", clickedIndex);
+    playGame(clickedIndex);
+  }
+
+
 function getXY(n) {
   let y = Math.floor(n / 8);
   let x = n - 8 * y;
@@ -32,7 +51,7 @@ var drawBoard = function () {
 
 drawBoard();
 
-var drawHighlight = function () {
+var highlightBox = function () {
   context.globalAlpha = 0.5;
   data = boardData.getBoard();
   var highlightPos = boardData.getHighlight();

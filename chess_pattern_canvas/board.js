@@ -38,8 +38,7 @@ var boardData = (function () {
     setHighlight: function (values, currentpos) {
       highlight = [];
       highlight = highlight.concat(values, currentpos);
-      // drawHighlight();
-      highlightHtml();
+      highlightBox();
     },
   };
 })();

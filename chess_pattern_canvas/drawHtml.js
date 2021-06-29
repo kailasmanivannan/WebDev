@@ -1,7 +1,18 @@
 var doc = document.getElementById("chessboard");
 var data;
 
-var drawHtml = function () {
+function createBoxElement(styleClass,piece,i) {
+  var newDiv = document.createElement("div");
+  newDiv.classList.add("box",styleClass); 
+  newDiv.innerText = piece;
+  newDiv.setAttribute("id", i);
+  newDiv.addEventListener('click',function () {
+    playGame(this.id - 1);
+  });
+  return newDiv;
+}
+
+var drawBoard = function () {
   doc.innerHTML = " ";
   data = boardData.getBoard();
   var colorA = "white",
@@ -14,34 +25,19 @@ var drawHtml = function () {
       var name = data[i].getName();
       piece = getImgPath(color, name);
     }
-    var newDiv = document.createElement("div");
-    newDiv.className = styleClass;
-    newDiv.innerText = piece;
-    newDiv.setAttribute("id", i);
-    doc.appendChild(newDiv);
+    var boxEle = createBoxElement(styleClass,piece,i);
+    doc.appendChild(boxEle);
     if (i % 8 === 0) {
       var swap = colorA;
       colorA = colorB;
       colorB = swap;
     }
   }
-  var pieces = document.querySelectorAll(".black");
-  for (var i = 0; i < pieces.length; i++) {
-    pieces[i].onclick = function () {
-      getSquare(this.id - 1);
-    };
-  }
-  pieces = document.querySelectorAll(".white");
-  for (var i = 0; i < pieces.length; i++) {
-    pieces[i].onclick = function () {
-      getSquare(this.id - 1);
-    };
-  }
 };
 
-drawHtml();
+drawBoard();
 
-var highlightHtml = function () {
+var highlightBox = function () {
   data = boardData.getBoard();
   var highlightPos = boardData.getHighlight();
   if (highlightPos.length === 0) {
